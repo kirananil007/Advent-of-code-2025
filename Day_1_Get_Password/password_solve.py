@@ -8,7 +8,7 @@ YEAR = 2025
 
 ## Get inputs for Advent of Code problems
 def get_aoc_input(day, session_cookie):
-    
+
     filename = f"input_day_{day}.txt"
     
     # Check local path for file
@@ -65,12 +65,46 @@ def solve_day_1(data):
             
     return zero_hits
 
+def solve_day_1_part_2(data):
+
+    current_pos = 50
+    total_zero_hits = 0
+
+    for line in data:
+        line = line.strip()
+        if not line:
+            continue
+        direction = line[0]
+        distance = int(line[1:])
+
+        total_zero_hits += (distance // 100)
+
+        remainder = distance % 100
+
+        for _ in range(remainder):
+            if direction == 'R':
+                current_pos = (current_pos + 1) % 100
+            elif direction == 'L':
+                current_pos = (current_pos - 1) % 100
+
+            if current_pos == 0:
+                total_zero_hits += 1
+
+    return total_zero_hits
+
 
 if __name__ == "__main__":
     day_data = get_aoc_input(1, SESSION_COOKIE)
     
-    answer = solve_day_1(day_data)
+    part1_answer = solve_day_1(day_data)
+
+    part2_answer = solve_day_1_part_2(day_data)
+
     
     print("-" * 30)
-    print(f"Day 1 Answer: {answer}")
+    print(f"Day 1 Answer Part 1: {part1_answer}")
+    print("-" * 30)
+
+    print("-" * 30)
+    print(f"Day 1 Answer Part 2: {part2_answer}")
     print("-" * 30)
