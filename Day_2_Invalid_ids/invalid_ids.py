@@ -57,6 +57,21 @@ def is_invalid_id(number):
     mid = length // 2
     return s[:mid] == s[mid:]
 
+def is_invalid_id_part2(number):
+    s = str(number)
+    length = len(s)
+
+    limit = length // 2 + 1
+
+    for pattern_len in range(1, limit):
+        if length % pattern_len == 0:
+            pattern = s[:pattern_len]
+            repetitions = length // pattern_len
+            if pattern * repetitions == s:
+                return True
+    
+    return False
+
 
 def solve_day_2(input_lines):
     """
@@ -97,9 +112,45 @@ def solve_day_2(input_lines):
                 
     return total_invalid_sum
 
+def solve_day_2_part2(filename):
+    if not os.path.exists(filename):
+        print(f"Error: {filename} not found.")
+        return 0, 0
+    
+    with open(filename, 'r') as f:
+        content = f.read().strip().replace('\n', '')
+
+    ranges = content.split(',')
+    total_sum = 0
+    count = 0
+
+    for r in ranges:
+        if not r:
+            continue
+        
+        try:
+            start_str, end_str = r.split('-')
+            start = int(start_str)
+            end = int(end_str)
+        except ValueError:
+            print(f"Skipping malformed range: {r}")
+            continue
+
+        for num in range(start, end + 1):
+            if is_invalid_id_part2(num):
+                total_sum += num
+                count += 1
+
+    return total_sum, count
+
 if __name__ == "__main__":
     day_data = get_aoc_input(2, SESSION_COOKIE)
 
     result = solve_day_2(day_data)
+
+    filename = "input_day_2.txt"
+    result_part2, count_part2 = solve_day_2_part2(filename)
     
-    print(f"Total Sum of Invalid IDs: {result}")
+    
+    print(f"Part 1 - Total Sum of Invalid IDs: {result}")
+    print(f"Part 2 - Total Sum of Invalid IDs: {result_part2}, Count: {count_part2}")
